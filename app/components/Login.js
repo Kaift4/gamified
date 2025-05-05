@@ -50,7 +50,7 @@ export default function Login() {
   if (!isOpen || user) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
       <div className="relative bg-[#202124] p-12 rounded-3xl shadow-2xl w-[95%] max-w-[600px] text-center text-white scale-110 sm:scale-125">
         <button
           onClick={handleClose}
