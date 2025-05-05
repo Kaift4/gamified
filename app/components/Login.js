@@ -18,13 +18,17 @@ export default function Login() {
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
 
-  // Checking if user is logged in when the component mounts
   useEffect(() => {
+    console.log("[Login.js] useEffect: Checking auth state...");
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      console.log("[Login.js] onAuthStateChanged - currentUser:", currentUser);
       setUser(currentUser);
-      setIsLoading(false); // Firebase auth check is complete
+      setIsLoading(false);
       if (!currentUser) {
-        setIsOpen(true); // Open login modal if not signed in
+        console.log("[Login.js] No user found — opening login modal.");
+        setIsOpen(true);
+      } else {
+        console.log("[Login.js] User already signed in.");
       }
     });
 
@@ -33,21 +37,39 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
+      console.log("[Login.js] Attempting sign-in...");
       await signInWithPopup(auth, provider);
-      console.log("User signed in!");
-      setIsOpen(false); // Close modal after login
+      console.log("[Login.js] User signed in!");
+      setIsOpen(false);
     } catch (error) {
-      console.error("Login failed:", error.message);
+      console.error("[Login.js] Login failed:", error.message);
     }
   };
 
-  const handleClose = () => setIsOpen(false);
+  const handleClose = () => {
+    console.log("[Login.js] Closing modal manually.");
+    setIsOpen(false);
+  };
 
-  // Prevent flicker  Show nothing while checking auth state
-  if (isLoading) return null;
+  // Debugging render decision logic
+  console.log(
+    "[Login.js] Render check — isLoading:",
+    isLoading,
+    " | isOpen:",
+    isOpen,
+    " | user:",
+    user
+  );
 
-  // Only show popup if user is NOT signed in
-  if (!isOpen || user) return null;
+  if (isLoading) {
+    console.log("[Login.js] Still loading auth state, returning null.");
+    return null;
+  }
+
+  if (!isOpen || user) {
+    console.log("[Login.js] No need to show login popup. Returning null.");
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-[9999]">
