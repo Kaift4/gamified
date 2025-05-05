@@ -94,11 +94,11 @@ export default function QuizPage() {
 
       {/* Sidebar */}
       <aside
-        className={`w-64 bg-gray-800 text-white p-4 shadow-xl z-50 transform md:translate-x-0 transition-transform ${
+        className={`w-64 bg-gray-800 text-white p-4 shadow-xl z-[1000] transform md:translate-x-0 transition-transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:relative md:block fixed h-full z-30 flex flex-col`}
       >
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-4 z-[2000]">
           <h2 className="text-lg font-bold">Upload Slot</h2>
           <button
             className="md:hidden bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-400 transition"
