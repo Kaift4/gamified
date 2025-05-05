@@ -86,7 +86,7 @@ export default function QuizPage() {
 
       {/* Sidebar Toggle Button */}
       <button
-        className="absolute top-4 left-4 md:hidden bg-gray-700 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 transition z-[100]"
+        className="absolute top-4 left-4 md:hidden bg-gray-700 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 transition z-[50]"
         onClick={() => setSidebarOpen(true)}
       >
         ☰
@@ -94,7 +94,7 @@ export default function QuizPage() {
 
       {/* Sidebar */}
       <aside
-        className={`w-64 bg-gray-800 text-white p-4 shadow-xl transform md:translate-x-0 transition-transform ${
+        className={`w-64 bg-gray-800 text-white p-4 shadow-xl z-50 transform md:translate-x-0 transition-transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:relative md:block fixed h-full z-30 flex flex-col`}
       >
