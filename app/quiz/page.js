@@ -86,7 +86,7 @@ export default function QuizPage() {
 
       {/* Sidebar Toggle Button */}
       <button
-        className="absolute top-4 left-4 md:hidden bg-gray-700 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 transition z-40"
+        className="absolute top-4 left-4 md:hidden bg-gray-700 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-600 transition z-[100]"
         onClick={() => setSidebarOpen(true)}
       >
         ☰
