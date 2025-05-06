@@ -59,24 +59,38 @@ export default function QuizPage() {
           role="dialog"
           aria-modal="true"
         >
-          <div className="bg-black rounded-2xl p-6 w-[90%] max-w-md shadow-xl">
-            <h2 className="text-xl text-gray-50 font-semibold mb-3">
+          <div className="bg-gray-900 rounded-2xl p-6 w-[90%] max-w-md shadow-xl text-white">
+            <h2 className="text-xl font-semibold mb-3 text-center">
               Enter your Gemini API Key
             </h2>
-            <p className="text-m text-gray-200 mb-4">
-              Don’t worry — it’s safe. We store it only in your browser's local
-              storage.
+            <p className="text-sm text-gray-300 mb-4 text-center">
+              Don’t worry — it’s stored only in your browser (localStorage).
             </p>
             <input
               type="text"
               value={apiKeyInput}
               onChange={(e) => setApiKeyInput(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              className="w-full p-2 rounded-lg mb-4 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Paste your Gemini API key here"
             />
             <button
-              onClick={handleApiKeySubmit}
-              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-500 transition"
+              onClick={() => {
+                const trimmedKey = apiKeyInput.trim();
+                if (trimmedKey) {
+                  localStorage.setItem("gemini_api_key", trimmedKey);
+                  setShowApiModal(false);
+                  setApiKey(trimmedKey);
+                  const storedText = localStorage.getItem("extracted_text");
+                  if (storedText) {
+                    fetchFlashcards(trimmedKey, storedText, 0); // Or fetchMcqs if it's MCQ mode
+                  } else {
+                    alert("No extracted text found!");
+                  }
+                } else {
+                  alert("Please enter a valid API key.");
+                }
+              }}
+              className="w-full bg-blue-600 py-2 rounded-lg hover:bg-blue-500 transition"
             >
               Save & Continue
             </button>
