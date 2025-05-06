@@ -7,7 +7,7 @@ import { getAuth } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { app } from "@/app/utils/firebaseConfig";
 import FloatingCogsIcon from "@/app/components/FloatingCogsIcon";
-import ResetApiModal from "@/app/components/resetapi"; // import the ResetApiModal
+import ResetApiModal from "@/app/components/resetapi";
 
 export default function QuizPage() {
   const router = useRouter();
@@ -16,34 +16,18 @@ export default function QuizPage() {
   const [isPremium, setIsPremium] = useState(false);
   const [showApiModal, setShowApiModal] = useState(false);
   const [apiKeyInput, setApiKeyInput] = useState("");
-  const [showResetModal, setShowResetModal] = useState(false); // to handle the reset modal visibility
+  const [showResetModal, setShowResetModal] = useState(false);
 
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // /* API Fix Start */
-  // Check localStorage for Gemini API key on load
+  // Check localStorage for Gemini API key on load, and set modal visibility accordingly
   useEffect(() => {
-    const key = localStorage.getItem("geminiApiKey");
-    if (key) {
-      // If API key exists, don't show the modal
-      setShowApiModal(false);
-    } else {
-      // If API key is not found, show the modal
-      setShowApiModal(true);
+    const storedKey = localStorage.getItem("gemini_api_key");
+    if (!storedKey) {
+      setShowApiModal(true); // Show modal if no API key is stored
     }
-  }, []); // Only runs once when the component mounts
-
-  const handleApiKeySubmit = () => {
-    const trimmedKey = apiKeyInput.trim();
-    if (!trimmedKey) {
-      return alert("Please enter your API key.");
-    }
-    localStorage.setItem("geminiApiKey", trimmedKey); // Save API key to localStorage
-    setApiKey(trimmedKey); // Optionally store it in state as well
-    setShowApiModal(false); // Close the modal once the key is saved
-  };
-  // /* API Fix End */
+  }, []);
 
   // Auth check for premium
   useEffect(() => {
@@ -57,6 +41,13 @@ export default function QuizPage() {
     });
     return () => unsubscribe();
   }, []);
+
+  const handleApiKeySubmit = () => {
+    if (!apiKeyInput.trim()) return alert("Please enter your API key.");
+    const trimmedKey = apiKeyInput.trim();
+    localStorage.setItem("gemini_api_key", trimmedKey); // Save the API key in localStorage
+    setShowApiModal(false); // Hide the modal after submission
+  };
 
   return (
     <div className="flex h-screen flex-col md:flex-row relative">
