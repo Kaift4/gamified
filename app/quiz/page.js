@@ -21,15 +21,29 @@ export default function QuizPage() {
   const auth = getAuth(app);
   const db = getFirestore(app);
 
+  // /* API Fix Start */
   // Check localStorage for Gemini API key on load
   useEffect(() => {
     const key = localStorage.getItem("geminiApiKey");
     if (key) {
+      // If API key exists, don't show the modal
       setShowApiModal(false);
     } else {
+      // If API key is not found, show the modal
       setShowApiModal(true);
     }
   }, []); // Only runs once when the component mounts
+
+  const handleApiKeySubmit = () => {
+    const trimmedKey = apiKeyInput.trim();
+    if (!trimmedKey) {
+      return alert("Please enter your API key.");
+    }
+    localStorage.setItem("geminiApiKey", trimmedKey); // Save API key to localStorage
+    setApiKey(trimmedKey); // Optionally store it in state as well
+    setShowApiModal(false); // Close the modal once the key is saved
+  };
+  // /* API Fix End */
 
   // Auth check for premium
   useEffect(() => {
@@ -44,15 +58,6 @@ export default function QuizPage() {
     return () => unsubscribe();
   }, []);
 
-  const handleApiKeySubmit = () => {
-    const trimmedKey = apiKeyInput.trim();
-    if (!trimmedKey) {
-      return alert("Please enter your API key.");
-    }
-    localStorage.setItem("geminiApiKey", trimmedKey);
-    setApiKey(trimmedKey); // Optionally store the key in the state
-    setShowApiModal(false); // Close the modal after saving the key
-  };
   return (
     <div className="flex h-screen flex-col md:flex-row relative">
       <FloatingCogsIcon />
@@ -79,22 +84,7 @@ export default function QuizPage() {
               placeholder="Paste your Gemini API key here"
             />
             <button
-              onClick={() => {
-                const trimmedKey = apiKeyInput.trim();
-                if (trimmedKey) {
-                  localStorage.setItem("gemini_api_key", trimmedKey);
-                  setShowApiModal(false);
-                  setApiKey(trimmedKey);
-                  const storedText = localStorage.getItem("extracted_text");
-                  if (storedText) {
-                    fetchFlashcards(trimmedKey, storedText, 0); // Or fetchMcqs if it's MCQ mode
-                  } else {
-                    alert("No extracted text found!");
-                  }
-                } else {
-                  alert("Please enter a valid API key.");
-                }
-              }}
+              onClick={handleApiKeySubmit}
               className="w-full bg-blue-600 py-2 rounded-lg hover:bg-blue-500 transition"
             >
               Save & Continue
