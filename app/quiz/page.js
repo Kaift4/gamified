@@ -24,10 +24,12 @@ export default function QuizPage() {
   // Check localStorage for Gemini API key on load
   useEffect(() => {
     const key = localStorage.getItem("geminiApiKey");
-    if (!key) {
+    if (key) {
+      setShowApiModal(false);
+    } else {
       setShowApiModal(true);
     }
-  }, []);
+  }, []); // Only runs once when the component mounts
 
   // Auth check for premium
   useEffect(() => {
@@ -43,11 +45,14 @@ export default function QuizPage() {
   }, []);
 
   const handleApiKeySubmit = () => {
-    if (!apiKeyInput.trim()) return alert("Please enter your API key.");
-    localStorage.setItem("geminiApiKey", apiKeyInput.trim());
-    setShowApiModal(false);
+    const trimmedKey = apiKeyInput.trim();
+    if (!trimmedKey) {
+      return alert("Please enter your API key.");
+    }
+    localStorage.setItem("geminiApiKey", trimmedKey);
+    setApiKey(trimmedKey); // Optionally store the key in the state
+    setShowApiModal(false); // Close the modal after saving the key
   };
-
   return (
     <div className="flex h-screen flex-col md:flex-row relative">
       <FloatingCogsIcon />
